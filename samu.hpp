@@ -159,7 +159,8 @@ public:
     }
 
 #ifdef NETCHAT
-    net.start_server ( 5555 );
+    net.start_server ( 5554 );
+    disp.net(" Connection ready");
 #endif
     NetworkCaregiverShell();
   }
@@ -637,7 +638,8 @@ private:
            << response;
 
       std::string r = resp.str();
-
+		net.getMsg(r);
+		
       std::cerr << r << std::endl;
 
 #ifdef NETCHAT
@@ -648,6 +650,7 @@ private:
 
 #ifdef DISP_CURSES
       samu.disp.log ( r );
+	disp.net(net.getstatus());
 #endif
 
 #else

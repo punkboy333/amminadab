@@ -75,7 +75,8 @@ public:
     mx = 0;
     my = 0;
 
-    vi_w = newwin ( 10+2, max_x, 0, 0 );
+    vi_w = newwin ( 10+2, max_x, 0, max_x/2 );
+    net_conect = newwin(10+2,max_x/2,0,0);
     log_w = newwin ( max_y- ( 10+2 ) - 3, max_x, 10+2, 0 );
     log_iw = newwin ( max_y- ( 10+2 ) - 3 -2, max_x-2, 10+2+1, 1 );
     shell_w = newwin ( 3, max_x, 10+2+max_y- ( 10+2 ) - 3, 0 );
@@ -104,11 +105,11 @@ public:
     init_pair ( 10, COLOR_MAGENTA, COLOR_BLACK );
     init_pair ( 11, COLOR_GREEN, COLOR_MAGENTA );
 
-    wbkgd ( vi_w, COLOR_PAIR ( 1 ) );
+    wbkgd ( vi_w, COLOR_PAIR ( 3 ) );
     wbkgd ( log_w, COLOR_PAIR ( 2 ) );
     wbkgd ( log_iw, COLOR_PAIR ( 2 ) );
     wbkgd ( shell_w, COLOR_PAIR ( 1 ) );
-
+    wbkgd(net_conect,COLOR_PAIR(4));
     nodelay ( shell_w, TRUE );
     keypad ( shell_w, TRUE );
     scrollok ( log_iw, TRUE );
@@ -123,6 +124,7 @@ public:
     delwin ( log_w );
     delwin ( log_iw );
     delwin ( shell_w );
+    delwin ( net_conect );
     endwin();
   }
 
@@ -153,7 +155,20 @@ public:
         ncurses_mutex.unlock();
       }
   }
-
+  void net ( std::string msg )
+  {
+    if ( ncurses_mutex.try_lock() )
+      {
+        ui();
+        werase ( net_conect );
+        wmove ( net_conect, 1, 0 );
+        waddstr ( net_conect, msg.c_str() );
+        box ( net_conect, 0, 0 );
+        mvwprintw ( net_conect, 0, 1, " Conection status " );
+        wrefresh ( net_conect);
+        ncurses_mutex.unlock();
+      }
+  }
   void vi ( char* vi_console )
   {
     if ( ncurses_mutex.try_lock() )
@@ -183,7 +198,7 @@ public:
                   }
               }
           }
-
+	
         box ( vi_w, 0, 0 );
         mvwprintw ( vi_w, 0, 1, " Samu's visual imagery " );
         wrefresh ( vi_w );
@@ -251,9 +266,14 @@ private:
         mx = max_x;
         my = max_y;
 
-        wresize ( vi_w, 10+2, mx );
+        wresize ( vi_w, 10+2, mx/2 );
         mvwin ( vi_w, 0, 0 );
         werase ( vi_w );
+	
+	wresize ( net_conect, 10+2, mx/2 );
+        mvwin ( net_conect, 0, mx/2 );
+        werase ( net_conect );
+	
 
         wresize ( log_w, my- ( 10+2 ) - 3, mx );
         mvwin ( log_w, 10+2, 0 );
@@ -267,6 +287,9 @@ private:
         mvwin ( shell_w, 10+2+my- ( 10+2 ) - 3, 0 );
         werase ( shell_w );
 
+	box ( net_conect, 0, 0 );
+        mvwprintw ( net_conect, 0, 1, " Conection status " );
+	
         box ( vi_w, 0, 0 );
         mvwprintw ( vi_w, 0, 1, " Samu's visual imagery " );
 
@@ -280,13 +303,14 @@ private:
         wrefresh ( vi_w );
         wrefresh ( log_w );
         wrefresh ( log_iw );
+	wrefresh ( net_conect );
         wrefresh ( shell_w );
       }
   }
 
   std::mutex ncurses_mutex;
   std::string buf;
-  WINDOW *vi_w;
+  WINDOW *vi_w ,*net_conect ;
   WINDOW *log_w, *log_iw;
   WINDOW *shell_w;
   int mx {0}, my {0};

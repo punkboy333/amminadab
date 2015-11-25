@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11 -pthread -O3 -lm -fopenmp    CMakeFiles/samu.dir/nlp.cpp.o CMakeFiles/samu.dir/samu.cpp.o CMakeFiles/samu.dir/main.cpp.o  -o CMakeFiles/CMakeRelink.dir/samu -rdynamic /usr/local/lib/liblink-grammar.so /home/punkboy/lib/pngwriter/lib/libpngwriter.so -lpng -lz /usr/local/lib/libfreetype.so -lboost_system -lboost_date_time -lcurses -lform 

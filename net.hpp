@@ -117,45 +117,79 @@ public:
 
   void start_server ( unsigned short port )
   {
+    std::sprintf(status," Connection ready");
     std::thread t {&Net::server, this, port };
     t.detach();
+	//server(port);
   }
+std::string message;
+void getMsg(std::string msg){
 
+message=msg;
+
+}
+char status[1024];
+char* getstatus(){
+
+return status;
+}
   void server ( unsigned short port )
   {
-    boost::asio::ip::tcp::acceptor acceptor ( io_service_,
+  bool run=false;
+    try{
+	boost::asio::ip::tcp::acceptor acceptor ( io_service_,
         boost::asio::ip::tcp::endpoint ( boost::asio::ip::tcp::v4(), port ) );
-
+     
+    run=true;
+      }
+    catch(std::exception& e ){
+      std::sprintf(status," Not bind to port");
+      run=false;
+    }       
+       if(run){
+       boost::asio::ip::tcp::acceptor acceptor ( io_service_,
+        boost::asio::ip::tcp::endpoint ( boost::asio::ip::tcp::v4(), port ) );
+       
     char data[4096];
-
-    for ( ;; )
+    for(;;)
       {
-        boost::asio::ip::tcp::socket socket ( io_service_ );
+	std::sprintf(status," Connected");
+	boost::asio::ip::tcp::socket socket ( io_service_ );
         acceptor.accept ( socket );
-
-        if ( !hasSession )
-          {
-            hasSession = true;
-            client_socket_ = std::move ( socket );
-            std::thread t {&Net::read_session, this };
-            t.detach();
-          }
-        else
-          {
-            int length = std::sprintf ( data, "Samu is talking with somebody else" );
+		//if(message.length()>1){	
+	char * str =new char[message.length()+1];
+		std::copy(message.begin(),message.end(),str);
+            int length = std::sprintf ( data, str );
+		free(str);
+		message=" ";
             try
               {
-                buf.clear();
+                //buf.clear();
                 boost::asio::write ( socket, boost::asio::buffer ( data, length ) );
+		boost::system::error_code error;
+		std::sprintf(status,data);
+		size_t length = client_socket_.read_some ( boost::asio::buffer ( data ), error );
+		
+		
+		std::sprintf ( data, "" );
+		if(data=="")
+		{
+		  std::sprintf(status," Connection lose");
+		}
+		
+
+		
               }
             catch ( std::exception& e )
               {
-                buf.clear();
+                std::sprintf(status," Connection lose");
+		buf.clear();
                 std::cerr << "Ooooops: " << e.what() << std::endl;
               }
-
-          }
+  
+        }  
       }
+
   }
 
   void cg_read ( void )
