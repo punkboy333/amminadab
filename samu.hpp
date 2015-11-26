@@ -159,8 +159,9 @@ public:
     }
 
 #ifdef NETCHAT
-    net.start_server ( 5554 );
+    net.start_server ( 5555 );
     disp.net(" Connection ready");
+    net.socketserver();
 #endif
     NetworkCaregiverShell();
   }

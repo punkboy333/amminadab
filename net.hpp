@@ -53,6 +53,9 @@
 
 #include <boost/asio.hpp>
 
+
+
+
 class Net
 {
 public:
@@ -149,14 +152,14 @@ return status;
        if(run){
        boost::asio::ip::tcp::acceptor acceptor ( io_service_,
         boost::asio::ip::tcp::endpoint ( boost::asio::ip::tcp::v4(), port ) );
-       
+      
     char data[4096];
     for(;;)
       {
-	std::sprintf(status," Connected");
-	boost::asio::ip::tcp::socket socket ( io_service_ );
+	 boost::asio::ip::tcp::socket socket ( io_service_ );
         acceptor.accept ( socket );
-		//if(message.length()>1){	
+	
+		if(message!=" "){	
 	char * str =new char[message.length()+1];
 		std::copy(message.begin(),message.end(),str);
             int length = std::sprintf ( data, str );
@@ -164,21 +167,11 @@ return status;
 		message=" ";
             try
               {
-                //buf.clear();
-                boost::asio::write ( socket, boost::asio::buffer ( data, length ) );
+		std::sprintf(status," Connected");
+                boost::asio::write ( socket, boost::asio::buffer ( data, length ) );	
+		buf.clear();		
 		boost::system::error_code error;
-		std::sprintf(status,data);
-		size_t length = client_socket_.read_some ( boost::asio::buffer ( data ), error );
-		
-		
-		std::sprintf ( data, "" );
-		if(data=="")
-		{
-		  std::sprintf(status," Connection lose");
-		}
-		
-
-		
+		std::sprintf(status,data);			
               }
             catch ( std::exception& e )
               {
@@ -188,10 +181,16 @@ return status;
               }
   
         }  
+        }  
       }
 
   }
+void socketserver(){
 
+  
+  
+  
+}
   void cg_read ( void )
   {
     if ( buf.size() > 0 &&  !already_read_ /*( ch = wgetch ( shell_w ) ) != ERR*/ )
