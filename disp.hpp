@@ -155,13 +155,14 @@ public:
         ncurses_mutex.unlock();
       }
   }
+  int sor = 3;
   void net ( std::string msg )
   {
     if ( ncurses_mutex.try_lock() )
       {
         ui();
         werase ( net_conect );
-        wmove ( net_conect, 1, 0 );
+        wmove ( net_conect, sor, 1 );
         waddstr ( net_conect, msg.c_str() );
         box ( net_conect, 0, 0 );
         mvwprintw ( net_conect, 0, 1, " Conection status " );

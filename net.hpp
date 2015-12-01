@@ -152,12 +152,14 @@ return status;
        if(run){
        boost::asio::ip::tcp::acceptor acceptor ( io_service_,
         boost::asio::ip::tcp::endpoint ( boost::asio::ip::tcp::v4(), port ) );
+	 boost::asio::ip::tcp::socket socket ( io_service_ );
+        acceptor.accept ( socket );
       
     char data[4096];
     for(;;)
       {
-	 boost::asio::ip::tcp::socket socket ( io_service_ );
-        acceptor.accept ( socket );
+//	 boost::asio::ip::tcp::socket socket ( io_service_ );
+//        acceptor.accept ( socket );
 	
 		if(message!=" "){	
 	char * str =new char[message.length()+1];
