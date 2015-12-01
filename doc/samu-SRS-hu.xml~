@@ -30,7 +30,7 @@
         <pubdate>2015</pubdate>
         <copyright>
             <year>2015</year>
-            <holder>Lipusz Péter</holder>
+            <holder>Dr. Bátfai Norbert</holder>
         </copyright>
         <legalnotice>
             <para>Samu Bátfai (Micimackó) Software Requirements Specification
@@ -380,6 +380,19 @@
                 <para> 
                     Samunak tudnia kell tájékoztatni a magasszintű felhasználókat a kapcsolati státuszról, visszajelzést adnia, képes-e több programal komunikálni.
                 </para>
+                   <para>                                
+			<figure>
+                            <title>A beszélgetés és a tanulás kapcsolata</title>
+                            <mediaobject>
+                                <imageobject>
+                                    <imagedata fileref="img/uc2.png" scale="55" />
+                                </imageobject>
+                                <textobject>
+                                    <phrase>A beszélgetés és a tanulás kapcsolata.</phrase>
+                                </textobject>
+                            </mediaobject>
+                        </figure>     
+			</para>
 		</section> 
             <section>
                 <title>Rendszerkövetelmények</title>   
